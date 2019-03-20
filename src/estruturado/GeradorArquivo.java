@@ -12,36 +12,11 @@ public class GeradorArquivo {
 	public final void gerarArquivo(String nome, Map<String,Object> propriedades, String tipo) throws IOException {
 		byte[] bytes = null;
 		if (tipo.equals("PROPRIEDADES_CRIPTOGRAFADO")) {
-			//responsável por gerar properties
-			StringBuilder propFileBuilder = new StringBuilder();
-			for (String prop: propriedades.keySet()) {
-				propFileBuilder.append(prop+"m"+propriedades.get(prop)+"\n");
-			}
-			bytes = propFileBuilder.toString().getBytes();
-			//responsável por criptografa
-			byte[] newBytes = new byte[bytes.length];
-			for (int i = 0; i<bytes.length;i++) {
-				newBytes[i] = (byte)((bytes[i]+10) % Byte.MAX_VALUE);
-			}
-			bytes = newBytes;
+			ProcessaPropriedadesCriptografado propCript = new ProcessaPropriedadesCriptografado();
+			bytes = propCript.processaPropriedadesCriptografado(propriedades);
 		} else if (tipo.equals("XML_COMPACTADO")) {
-			//responsável por gera xml
-			StringBuilder propFileBuilder = new StringBuilder();
-			propFileBuilder.append("<properties>");
-			for (String prop: propriedades.keySet()) {
-				propFileBuilder.append("<"+prop+">"+propriedades.get(prop)+"</"+prop+">");
-			}
-			propFileBuilder.append("</propriedades>");
-			bytes = propFileBuilder.toString().getBytes();
-			
-			// responsável por compacta
-			ByteArrayOutputStream byteout = new ByteArrayOutputStream();
-			ZipOutputStream out = new ZipOutputStream(byteout);
-			out.putNextEntry(new ZipEntry("internal"));
-			out.write(bytes);
-			out.closeEntry();
-			out.close();
-			bytes = byteout.toByteArray();
+			ProcessaXmlCompactado xml = new ProcessaXmlCompactado();
+			bytes = xml.processaXmlCompactado(propriedades);
 		} else {
 			System.out.println("Desconheço essa opção");
 		}
@@ -49,5 +24,6 @@ public class GeradorArquivo {
 		fileout.write(bytes);
 		fileout.close();
 	}
+
 
 }
