@@ -6,9 +6,11 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class GeradorArquivoXmlCompactado extends GeradorArquivo{
+public class GeradorArquivoXml extends GeradorArquivo{
 
-	
+	public GeradorArquivoXml(Processador processador) {
+		super(processador);
+	}
 	@Override	
 	protected String gerarConteudo(Map<String,Object> propriedades) {
 		//responsável por gerar xml
@@ -23,15 +25,5 @@ public class GeradorArquivoXmlCompactado extends GeradorArquivo{
 	
 		
 	
-	@Override
-	protected byte[] processaConteudo(byte[] bytes) throws IOException {
-		// responsável por compactar
-				ByteArrayOutputStream byteout = new ByteArrayOutputStream();
-				ZipOutputStream out = new ZipOutputStream(byteout);
-				out.putNextEntry(new ZipEntry("internal"));
-				out.write(bytes);
-				out.closeEntry();
-				out.close();
-				return byteout.toByteArray();
-	}
+	
 }
